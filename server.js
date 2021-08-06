@@ -19,14 +19,28 @@ app.get("/", function (req, res) {
 });
 
 // MY SOLUTION
+app.get("/api", function (req, res) {
+  let date = new Date();
+  res.json({
+    unix: date.valueOf(),
+    utc: date.toUTCString(),
+  });
+});
+
 app.get("/api/:timeInput", function (req, res) {
   let input = req.params.timeInput;
   let date;
+
   if (isNaN(Number(input))) {
     date = new Date(input);
   } else {
     date = new Date(Number(input));
   }
+
+  if (date.toString() === "Invalid Date") {
+    res.json({ error: "Invalid Date" });
+  }
+
   res.json({
     unix: date.valueOf(),
     utc: date.toUTCString(),
@@ -35,5 +49,7 @@ app.get("/api/:timeInput", function (req, res) {
 
 // listen for requests :)
 var listener = app.listen(process.env.PORT, function () {
-  console.log("Your app is listening on port " + listener.address().port);
+  console.log(
+    "Your app is listening on http://localhost:" + listener.address().port
+  );
 });
